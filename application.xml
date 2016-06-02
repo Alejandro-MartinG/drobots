@@ -2,8 +2,8 @@
 <!-- This file was written by IceGrid Admin -->
 <icegrid>
    <application name="DrobotsApplication">
-      <node name="DrobotsApplication">
-         <server id="Client" activation="manual" exe="/home/alex/work/drobots/Cliente.py">
+      <node name="node1">
+         <server id="Client" activation="always" exe="/home/alex/work/drobots/Client.py">
             <properties>
                <property name="Game_server" value="drobots5"/>
                <property name="Game_server.Locator" value="IceGrid/Locator -t:tcp -h atclab.esi.uclm.es -p 4061"/>

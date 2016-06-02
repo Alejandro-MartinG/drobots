@@ -1,11 +1,11 @@
-start-grid: /tmp/db/registry /tmp/db/node1 /tmp/db/node2 /tmp/db/node3
+start-grid: /tmp/db/registry /tmp/db/node1
 	icegridnode --Ice.Config=node1.config &
-	sleep 5
-	icegridnode --Ice.Config=node2.config &
-	icegridnode --Ice.Config=node3.config &
+	while ! netstat -lptn 2> /dev/null | grep ":4061"; do sleep 1; done
+	icegridadmin --Ice.Config=locator.config -uuser -ppass -e "application add 'application.xml'" &
+	icegridadmin --Ice.Config=locator.config -uuser -ppass -e "application update 'application.xml'"
 
 stop-grid:
-	for node in node1 node2 node3; do \
+	for node in node1; do \
 		icegridadmin --Ice.Config=locator.config -uuser -ppass -e "node shutdown $$node"; \
 		done
 	killall icegridnode
