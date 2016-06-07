@@ -19,7 +19,7 @@ class Player(drobots.Player):
         current.adapter.getCommunicator().shutdown()
 
     def gameAbort(self, current=None):
-        print("Break!!!!!!1")
+        print("Break!!!!!!")
         current.adapter.getCommunicator().shutdown()
 
     def makeController(self, robot, current=None):
