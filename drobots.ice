@@ -32,8 +32,13 @@ module drobots {
     void robotDestroyed();
   };
 
+  interface DetectorController {
+    void alert(Point pos, int enemies);
+  };
+
   interface Player {
     RobotController* makeController(Robot* bot);
+    DetectorController* makeDetectorController();
     void win();
     void lose();
     void gameAbort();

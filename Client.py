@@ -1,30 +1,39 @@
+#!/usr/bin/python
+# -*- coding:utf-8; mode:python -*-
+
 import sys
 import Ice
 Ice.loadSlice('drobots.ice')
 import drobots
-import Player
+import math
+import random
+from Player import PlayerI
 
 
 class Client(Ice.Application):
     def run(self, argv):
         broker = self.communicator()
         adapter = broker.createObjectAdapter("PlayerAdapter")
+        servant = PlayerI()
 
-        servant = Player(adapter)
-        proxyServer = adapter.add(servant, broker.stringToIdentity("Alexxx"))
-        prx_id = proxyServer.ice_getIdentity()
-        direct_prx = adapter.createDirectProxy(prx_id)
-        player = drobots.PlayerPrx.uncheckedCast(direct_prx)
+        id = broker.stringToIdentity("Alex")
+        adapter.add(servant, id)
 
+        direct_prx = adapter.createDirectProxy(id)
         adapter.activate()
+        player = drobots.PlayerPrx.checkedCast(direct_prx)
+        if not player:
+            raise RuntimeError('Invalid player proxy')
 
-        proxyClient=self.communicator().propertyToProxy("Game")
-        game=drobots.GamePrx.checkedCast(proxyClient)
-        name = "ale12344"
-        game.login(player, str(name))
-        print("logueado?")
+        client_prx = broker.propertyToProxy("Game_proxy")
+        game = drobots.GamePrx.checkedCast(client_prx)
+        if not game:
+            raise RuntimeError('Invalid game proxy')
+
+        name = "alex" + str(random.randint(1, 10))
+        game.login(player, name)
 
         self.shutdownOnInterrupt()
         broker.waitForShutdown()
 
-Client().main(sys.argv)
+sys.exit(Client().main(sys.argv))
