@@ -30,8 +30,24 @@ class Client(Ice.Application):
         if not game:
             raise RuntimeError('Invalid game proxy')
 
-        name = "alex" + str(random.randint(1, 10))
-        game.login(player, name)
+
+        while True:
+            try:
+                print("logging... ")
+                name = "alex" + str(random.randint(1, 10))
+                game.login(player, name)
+                print("I'm logged bro!!")
+                break
+            except drobots.GameInProgress:
+                print red_nd_bold + "\nGame in progress waiting ... " + end_format
+                time.sleep(10)
+            except drobots.InvalidProxy:
+                print red_nd_bold + "\nInvalid proxy" + end_format
+                sys.exit(0)
+            except drobots.InvalidName, e:
+                print red_nd_bold + "\nInvalid player name :(" + end_format
+                print str(e.reason)
+                sys.exit(0)
 
         self.shutdownOnInterrupt()
         broker.waitForShutdown()
