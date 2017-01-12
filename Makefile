@@ -1,24 +1,44 @@
 #!/usr/bin/make -f
 # -*- mode:makefile -*-
 
-start-grid: /tmp/db/registry /tmp/db/node1
+NODES=$(basename $(shell ls node*.config | sort -r))
+NODE_DIRS=$(addprefix /tmp/db/, $(NODES))
+IG_ADMIN=icegridadmin --Ice.Config=locator.config -u user -p pass
 
-	icegridnode --Ice.Config=node1.config &
-	while ! netstat -lptn 2> /dev/null | grep ":4061"; do sleep 1; done
+start-grid: /tmp/db/registry $(NODE_DIRS)
+				icegridnode --Ice.Config=node1.config &
 
-	icegridadmin --Ice.Config=locator.config -uuser -ppass -e "node list" &
-	icegridadmin --Ice.Config=locator.config -uuser -ppass -e "application add 'application.xml'" &
-	icegridadmin --Ice.Config=locator.config -uuser -ppass -e "application update 'application.xml'"
+				@echo -- waiting registry to start...
+				@while ! netstat -lptn 2> /dev/null | grep ":4061" > /dev/null; do \
+						sleep 1; \
+				done
+
+				@for node in $(filter-out node1, $(NODES)); do \
+						icegridnodede --Ice.Config=$$node.config & \
+						echo -- $$node started; \
+				done
+
+				icegridadmin --Ice.Config=locator.config -uuser -ppass -e "application add 'drobots.xml'"&
+				icegridadmin --Ice.Config=locator.config -uuser -ppass -e "application update 'drobots.xml'"
+				@echo -- drobots.xml add and update
+
+
+				@echo -- ok
 
 stop-grid:
-	for node in node1; do \
-		icegridadmin --Ice.Config=locator.config -uuser -ppass -e "node shutdown $$node"; \
-		done
-	killall icegridnode
+				@for node in $(NODES); do \
+						$(IG_ADMIN)NODES -e "node shutdown $$node"; \
+				done
+
+				@killall icegridnode
+				@echo -- ok
+
+show-nodes:
+				$(IG_ADMIN) -e "node list"
 
 /tmp/db/%:
-	mkdir -p $@
+				mkdir -p $@
 
 clean: stop-grid
-	rm *~
-	rm -r /tmp/db
+				-$(RM) *~
+				-$(RM) -r /tmp/db
