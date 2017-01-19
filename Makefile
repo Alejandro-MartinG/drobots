@@ -14,20 +14,19 @@ start-grid: /tmp/db/registry $(NODE_DIRS)
 				done
 
 				@for node in $(filter-out node1, $(NODES)); do \
-						icegridnodede --Ice.Config=$$node.config & \
+						icegridnode --Ice.Config=$$node.config & \
 						echo -- $$node started; \
 				done
 
-				icegridadmin --Ice.Config=locator.config -uuser -ppass -e "application add 'drobots.xml'"&
-				icegridadmin --Ice.Config=locator.config -uuser -ppass -e "application update 'drobots.xml'"
-				@echo -- drobots.xml add and update
+				$(IG_ADMIN) -e "application add 'drobots.xml'"&
+				$(IG_ADMIN) -e "application update 'drobots.xml'"
 
 
 				@echo -- ok
 
 stop-grid:
 				@for node in $(NODES); do \
-						$(IG_ADMIN)NODES -e "node shutdown $$node"; \
+						$(IG_ADMIN) -e "node shutdown $$node"; \
 				done
 
 				@killall icegridnode
@@ -35,6 +34,9 @@ stop-grid:
 
 show-nodes:
 				$(IG_ADMIN) -e "node list"
+
+check-nodes:
+	ps ufax | grep icegridnode
 
 /tmp/db/%:
 				mkdir -p $@
