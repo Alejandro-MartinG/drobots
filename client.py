@@ -7,7 +7,7 @@ Ice.loadSlice('drobots.ice')
 import drobots
 import math
 import random
-from Player import PlayerI
+from player import PlayerI
 
 
 class Client(Ice.Application):
@@ -39,14 +39,14 @@ class Client(Ice.Application):
                 print("I'm logged bro!!")
                 break
             except drobots.GameInProgress:
-                print red_nd_bold + "\nGame in progress waiting ... " + end_format
+                print("\nGame in progress waiting ... ")
                 time.sleep(10)
             except drobots.InvalidProxy:
-                print red_nd_bold + "\nInvalid proxy" + end_format
+                print("\nInvalid proxy")
                 sys.exit(0)
             except drobots.InvalidName, e:
-                print red_nd_bold + "\nInvalid player name :(" + end_format
-                print str(e.reason)
+                print("\nInvalid player name :(")
+                print(str(e.reason))
                 sys.exit(0)
 
         self.shutdownOnInterrupt()
