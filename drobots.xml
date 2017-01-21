@@ -51,15 +51,5 @@
       </server>
     </node>
 
-    <node name="node4">
-      <server id="Factory4" activation="always" exe="./factory.py">
-        <properties>
-        </properties>
-        <adapter name="Factory_Adapter" endpoints="tcp" id="${server}.Factory_Adapter">
-          <object identity="Factory4" type="::drobots::Factory" property="Identity"/>
-        </adapter>
-      </server>
-    </node>
-
   </application>
 </icegrid>
