@@ -14,14 +14,9 @@ module services {
     ObjectPrxDict list();
   };
 
-  interface RobotControllerDefend extends drobots::RobotController {};
-
-  interface RobotControllerAttack extends drobots::RobotController {};
-
   interface Factory {
     drobots::RobotController* make(drobots::Robot* robot, int cont1, int cont2);
-
+    drobots::DetectorController* makeDetector();
   };
 
 };
-

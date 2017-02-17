@@ -36,6 +36,10 @@ module drobots {
     void alert(Point pos, int enemies);
   };
 
+  interface RobotControllerDefend extends RobotController {};
+
+  interface RobotControllerAttack extends RobotController {};
+
   interface Player {
     RobotController* makeController(Robot* bot);
     DetectorController* makeDetectorController();

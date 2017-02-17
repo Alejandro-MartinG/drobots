@@ -10,6 +10,7 @@ class PlayerI(drobots.Player):
         self.factories = 1
         self.defenders = 1
         self.attackers = 1
+        self.detectors = 0
 
     def win(self, current=None):
         print("Win")
@@ -25,13 +26,22 @@ class PlayerI(drobots.Player):
 
     def makeDetectorController(self, current=None):
         print("Make detector starting")
+        print("Detector controller Factory: "+str(self.factories))
+        proxy_factory = current.adapter.getCommunicator().stringToProxy("Factory2")
+        factory = services.FactoryPrx.checkedCast(proxy_factory)
+        self.detectors += 1
+        print("done detector bro!!!")
+
+        return factory.makeDetector()
 
     def makeController(self, bot, current=None):
         print("Make controller starting!!!!")
 
         proxy = current.adapter.getCommunicator().stringToProxy("Container")
+        print("Container proxy: ", proxy)
         container_prx = services.ContainerPrx.checkedCast(proxy)
 
+        print("Make Controller Factory: "+str(self.factories))
         fproxy = current.adapter.getCommunicator().stringToProxy("Factory"+str(self.factories))
         factory_prx = services.FactoryPrx.checkedCast(fproxy)
 
@@ -45,7 +55,9 @@ class PlayerI(drobots.Player):
             container_prx.link("RobotDefender" + str(self.defenders), robot_prx)
             self.defenders += 1
 
+        if (self.factories == 3):
+            self.factories = 0
+
         self.factories += 1
-        print("Factory"+str(self.factories))
 
         return robot_prx

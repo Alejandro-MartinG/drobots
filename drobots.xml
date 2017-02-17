@@ -4,9 +4,9 @@
   <application name="drobots">
     <node name="node1">
 
-      <server id="Client" activation="always" exe="/home/alex/work/drobots/client.py">
+      <server id="Client" activation="always" exe="./client.py">
         <properties>
-          <property name="Game_proxy" value="drobots6"/>
+          <property name="Game_proxy" value="drobots7"/>
           <property name="Game_proxy.Locator" value="IceGrid/Locator -t:tcp -h atclab.esi.uclm.es -p 4061"/>
         </properties>
 
@@ -36,7 +36,7 @@
         <properties>
         </properties>
         <adapter name="Factory_Adapter" endpoints="tcp" id="${server}.Factory_Adapter">
-          <object identity="Factory2" type="::drobots::Factory" property="Identity"/>
+          <object identity="Factory2" type="::services::Factory" property="Identity"/>
         </adapter>
       </server>
     </node>
@@ -46,7 +46,7 @@
         <properties>
         </properties>
         <adapter name="Factory_Adapter" endpoints="tcp" id="${server}.Factory_Adapter">
-          <object identity="Factory3" type="::drobots::Factory" property="Identity"/>
+          <object identity="Factory3" type="::services::Factory" property="Identity"/>
         </adapter>
       </server>
     </node>

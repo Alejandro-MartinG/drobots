@@ -35,9 +35,6 @@ stop-grid:
 show-nodes:
 				$(IG_ADMIN) -e "node list"
 
-check-nodes:
-	ps ufax | grep icegridnode
-
 /tmp/db/%:
 				mkdir -p $@
 

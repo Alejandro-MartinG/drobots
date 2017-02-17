@@ -9,6 +9,8 @@ import drobots
 import services
 from robot_controller import RobotControllerAttack
 from robot_controller import RobotControllerDefend
+from detector_controller import DetectorControllerI
+
 
 class FactoryI(services.Factory):
     def make(self, robot, attackers, defenders, current=None):
@@ -27,6 +29,16 @@ class FactoryI(services.Factory):
         elif (robot.ice_isA("::drobots::Defender")):
             return RobotControllerDefend(robot, defenders)
 
+    def makeDetector(self, current = None):
+        servantDController = DetectorControllerI()
+        proxyDController = current.adapter.addWithUUID(servantDController)
+        direct_DControllerProxy = current.adapter.createDirectProxy(proxyDController.ice_getIdentity())
+
+        detectorController = drobots.DetectorControllerPrx.checkedCast(direct_DControllerProxy)
+
+        return detectorController
+
+
 class ServerFactory(Ice.Application):
     def run(self, argv):
         broker = self.communicator()
@@ -39,7 +51,7 @@ class ServerFactory(Ice.Application):
 
         proxy_server = adapter.add(servant, identidad)
 
-        print(str(proxy_server))
+        print("ServerFactory", str(proxy_server))
 
         adapter.activate()
         self.shutdownOnInterrupt()
